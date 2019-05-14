@@ -28,6 +28,9 @@
     				const res = await getUserCity();
     				if (res.status == 1) {
     					this.pieData = res.user_city;
+    					//返回值 返回状态1 以及 城市分布对象
+                        //{beijing: 5450，hangzhou: 1391}
+    					console.log(this.pieData)
     				}else{
     					throw new Error(res)
     				}
@@ -41,5 +44,4 @@
 
 <style lang="less">
 	@import '../style/mixin';
-	
 </style>

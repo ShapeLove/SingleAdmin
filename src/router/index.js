@@ -20,12 +20,18 @@ const vueEdit = r => require.ensure([], () => r(require('@/page/vueEdit')), 'vue
 const adminSet = r => require.ensure([], () => r(require('@/page/adminSet')), 'adminSet');
 const sendMessage = r => require.ensure([], () => r(require('@/page/sendMessage')), 'sendMessage');
 const explain = r => require.ensure([], () => r(require('@/page/explain')), 'explain');
+const tagList = r => require.ensure([], () => r(require('@/page/tagList')), 'tagList');
+const test = r => require.ensure([], () => r(require('@/page/test')), 'test');
 
 const routes = [
 	{
 		path: '/',
 		component: login
 	},
+    {
+        path: '/test',
+        component: test
+    },
 	{
 		path: '/manage',
 		component: manage,
@@ -47,6 +53,10 @@ const routes = [
 			component: userList,
 			meta: ['数据管理', '用户列表'],
 		},{
+            path: '/tagList',
+            component: tagList,
+            meta: ['数据管理', '标签列表'],
+        },{
 			path: '/shopList',
 			component: shopList,
 			meta: ['数据管理', '商家列表'],
