@@ -11,8 +11,8 @@ let routerMode = 'hash';
 let baseImgPath;
 
 if (process.env.NODE_ENV == 'development') {
-	baseUrl = '//shape.shpcoder.cn';//localhost:8080
-    baseImgPath = '/img/';
+	baseUrl = '//localhost:8080';//localhost:8080
+    baseImgPath = '//zimg.shpcoder.cn/';
 }else{
 	baseUrl = '//elm.cangdu.org';
     baseImgPath = '//elm.cangdu.org/img/';
