@@ -12,7 +12,13 @@
     export default {
     	data(){
     		return {
-    			pieData: {},
+    			pieData: {
+    			    beijing: 5699,
+                    hangzhou: 1407,
+                    qita: 13758,
+                    shanghai: 2373,
+                    shenzhen: 2619
+                },
     		}
     	},
     	components: {

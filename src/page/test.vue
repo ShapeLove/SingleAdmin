@@ -14,11 +14,11 @@
             }
         },
         created() {
-           // axios.get("http://localhost:8080/except/list")
-           //     .then((response) => {
-           //         console.log(response)
-           //         this.list = response.data;
-           //     })
+            /*axios.get("http://localhost:8080/except/list")
+               .then((response) => {
+                   console.log(response)
+                   this.list = response.data;
+               })*/
             this.initdata();
         },
         methods: {

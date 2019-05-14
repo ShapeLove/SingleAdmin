@@ -2,19 +2,19 @@
     <div class="fillcontain">
         <head-top></head-top>
         <header class="admin_title">管理员信息</header>
-        <div class="admin_set">
+        <el-card class="admin_set">
             <ul>
                 <li>
-                    <span>姓名：</span><span>{{adminInfo.user_name}}</span>
+                    <span>姓名：</span><span>侯鑫超</span>
                 </li>
                 <li>
-                    <span>注册时间：</span><span>{{adminInfo.create_time}}</span>
+                    <span>注册时间：</span><span>2019-03-20 12:07:23</span>
                 </li>
                 <li>
-                    <span>管理员权限：</span><span>{{adminInfo.admin}}</span>
+                    <span>管理员权限：</span><span>超级管理员</span>
                 </li>
                 <li>
-                    <span>管理员 ID：</span><span>{{adminInfo.id}}</span>
+                    <span>管理员 ID：</span><span>123445</span>
                 </li>
                 <li>
                     <span>更换头像：</span>
@@ -27,9 +27,9 @@
                       <img v-if="adminInfo.avatar" :src="baseImgPath + adminInfo.avatar" class="avatar">
                       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
-                </li>    
+                </li>
             </ul>
-        </div>
+        </el-card>
     </div>
 </template>
 

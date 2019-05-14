@@ -10,7 +10,7 @@
     import 'echarts/lib/chart/pie';
     import 'echarts/lib/component/title';
     import 'echarts/lib/component/legend';
-    
+
     export default {
         mounted(){
             this.myChart = echarts.init(document.getElementById('visitorpie'));
@@ -19,6 +19,7 @@
         props: ['pieData'],
         methods: {
             initData(){
+                console.log(this.pieData)
                 const option = {
                     title : {
                         text: '用户分布',

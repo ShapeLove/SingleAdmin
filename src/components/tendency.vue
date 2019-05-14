@@ -33,7 +33,7 @@
                         trigger: 'axis'
                     },
                     legend: {
-                        data:['新注册用户', '新增订单', '新增管理员','新加入用户']
+                        data:['新注册用户', '新增管理员','新加入用户']
                     },
                     toolbox: {
                         show: true,
@@ -97,33 +97,9 @@
                             },
                         },
                         {
-                            name:'新增订单',
-                            type:'line',
-                            data:this.sevenDate[1],
-                            yAxisIndex: 1,
-                            markPoint: {
-                                data: [
-                                    {type: 'max', name: '最大值'},
-                                    {type: 'min', name: '最小值'}
-                                ]
-                            },
-                        },
-                        {
                             name:'新加入用户',
                             type:'line',
-                            data:this.sevenDate[2],
-                            yAxisIndex: 1,
-                            markPoint: {
-                                data: [
-                                    {type: 'max', name: '最大值'},
-                                    {type: 'min', name: '最小值'}
-                                ]
-                            },
-                        },
-                        {
-                            name:'新增管理员',
-                            type:'line',
-                            data:this.sevenDate[2],
+                            data:this.sevenDate[1],
                             yAxisIndex: 1,
                             markPoint: {
                                 data: [
@@ -139,13 +115,13 @@
         },
         watch: {
             sevenDate: function (){
-                console.log(this.sevenDate);
+                console.log(JSON.stringify(this.sevenDate));
                 //this.sevenDate 存放每类数据当天人数情况数组
                 //数组包七位数组[[21, 16, 19, 52, 40, 61, 39],[七位]]
                 this.initData()
             },
             sevenDay: function (){
-                console.log(this.sevenDay);
+                console.log(JSON.stringify(this.sevenDay));
                 //图表下标显示的时间数据
                 // 七位数组["2019-05-02", "2019-05-03", "2019-05-04", "2019-05-05", "2019-05-06", "2019-05-07", "2019-05-08"]
                 this.initData()

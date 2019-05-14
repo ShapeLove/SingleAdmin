@@ -2,37 +2,58 @@
     <div class="fillcontain">
         <head-top></head-top>
         <div class="table_container">
-            <el-button type="primary" plain @click="open" style="margin-bottom: 10px;">添加标签</el-button>
             <el-table
                 :data="tableData"
                 highlight-current-row
-                :row-class-name="tableRowClassName"
                 style="width: 100%">
+                <el-table-column type="expand">
+                    <template slot-scope="props">
+                        <el-form label-position="left" inline class="demo-table-expand">
+                            <el-form-item label="举报人">
+                                <span>{{ props.row.open_id }}</span>
+                            </el-form-item>
+                            <el-form-item label="被举报人">
+                                <span>{{ props.row.report_open_id  }}</span>
+                            </el-form-item>
+                            <el-form-item label="时间">
+                                <span>{{ props.row.create  }}</span>
+                            </el-form-item>
+                        </el-form>
+                    </template>
+                </el-table-column>
                 <el-table-column
                     type="index"
                     width="100">
                 </el-table-column>
                 <el-table-column
-                    property="create"
-                    label="创建日期"
-                    >
+                    property="open_id"
+                    label="举报人"
+                >
                 </el-table-column>
                 <el-table-column
-                    property="tagName"
-                    label="标签名称"
-                    >
-                    <template slot-scope="scope">
-                        <el-tag
-                            :type="scope.$index %2 > 0 ? 'primary' : 'success'"
-                            close-transition>{{scope.row.tagName}}</el-tag>
-                    </template>
+                    property="report_open_id"
+                    label="被举报人"
+                >
+                </el-table-column>
+                <el-table-column
+                    property="report_type"
+                    label="举报类型"
+                >
+                </el-table-column>
+                <el-table-column
+                    property="create"
+                    label="举报时间"
+                >
                 </el-table-column>
                 <el-table-column label="操作" >
                     <template slot-scope="scope">
                         <el-button
                             size="small"
+                            @click="handlePass(scope.row)" >通过</el-button>
+                        <el-button
+                            size="small"
                             type="danger"
-                            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                            @click="refuseReport(scope.$index, scope.row)">驳回</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -47,20 +68,20 @@
                 </el-pagination>
             </div>
             <el-dialog
-                title="添加标签名"
+                title="输入驳回原因"
                 :visible.sync="centerDialogVisible"
-                width="30%"
+                width="20%"
                 center>
 
                 <el-form :model="formInline">
-                    <el-form-item label="标签名">
-                        <el-input v-model="formInline.tagName" placeholder="请输入标签名..."></el-input>
+                    <el-form-item label="驳回原因">
+                        <el-input v-model="formInline.reason" placeholder="请输入驳回原因..."></el-input>
                     </el-form-item>
                 </el-form>
 
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="centerDialogVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="closeAddTag">确 定</el-button>
+                    <el-button type="primary" @click="closeReason">确 定</el-button>
                  </span>
             </el-dialog>
         </div>
@@ -76,25 +97,28 @@
             return {
                 centerDialogVisible: false,
                 formInline:{
-                    tagName: '',
-                    time: ''
+                    reason: '',
                 },
                 tableData: [{
                     create: '2016-05-02',
-                    tagName: '帅哥',
-                    city: '上海市普陀区金沙江路 1518 弄'
+                    report_open_id: '张颖',
+                    open_id: '自己',
+                    report_type:'3'
                 }, {
-                    create: '2016-05-04',
-                    tagName: '美女',
-                    city: '上海市普陀区金沙江路 1517 弄'
+                    create: '2016-05-02',
+                    report_open_id: '赵武',
+                    open_id: '李四',
+                    report_type:'2'
                 }, {
-                    create: '2016-05-01',
-                    tagName: '唱歌',
-                    city: '上海市普陀区金沙江路 1519 弄'
+                    create: '2016-05-02',
+                    report_open_id: '杜德伟',
+                    open_id: '赵雪',
+                    report_type:'2'
                 }, {
-                    create: '2016-05-03',
-                    tagName: '跳舞',
-                    city: '上海市普陀区金沙江路 1516 弄'
+                    create: '2016-05-13',
+                    report_open_id: '张三',
+                    open_id: '梨子',
+                    report_type:'1'
                 }],
                 currentRow: null,
                 offset: 0,
@@ -111,18 +135,16 @@
         },
         methods: {
             open(){
-                this.centerDialogVisible = true;
+
             },
-            tableRowClassName(row, index) {
-                if (index === 1) {
-                    return 'info-row';
-                } else if (index === 3) {
-                    return 'positive-row';
-                }
-                return '';
-            },
-            closeAddTag(){
+            closeReason(){
                 this.centerDialogVisible = false;
+                console.log("驳回" + this.formInline.reason)
+            },
+            //驳回
+            refuseReport(){
+                this.centerDialogVisible = true;
+
             },
             //获取标签信息
             async initData(){
@@ -164,7 +186,12 @@
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`);
             },
-
+            handlePass(row){
+                this.$message({
+                    type: 'success',
+                    message: '举报成功!'
+                });
+            },
             handleCurrentChange(val) {
                 this.currentPage = val;
                 this.offset = (val - 1)*this.limit;
@@ -172,27 +199,6 @@
             },
             addTag(index, row){
                 this.$router.push({ path: 'addTag', query: { restaurant_id: row.id }})
-            },
-            async handleDelete(index, row) {
-                console.log( index);
-                try{
-                    const res = await deleteResturant(row.id);
-                    if (res.status == 1) {
-                        this.$message({
-                            type: 'success',
-                            message: '删除标签成功'
-                        });
-                        this.tableData.splice(index, 1);
-                    }else{
-                        throw new Error(res.message)
-                    }
-                }catch(err){
-                    this.$message({
-                        type: 'error',
-                        message: err.message
-                    });
-                    console.log('删除标签失败')
-                }
             },
             async querySearchAsync(queryString, cb) {
                 if (queryString) {
@@ -209,11 +215,7 @@
                         console.log(err)
                     }
                 }
-            },
-            addressSelect(vale){
-                const {address, latitude, longitude} = vale;
-                this.address = {address, latitude, longitude};
-            },
+            }
         },
     }
 </script>
@@ -262,13 +264,6 @@
         width: 120px;
         height: 120px;
         display: block;
-    }
-    .el-table .info-row {
-        background: oldlace;
-    }
-
-    .el-table .positive-row {
-        background: #f0f9eb;
     }
 </style>
 

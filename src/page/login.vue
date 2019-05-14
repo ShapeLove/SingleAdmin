@@ -105,6 +105,7 @@
 		methods: {
 			...mapActions(['getAdminData']),
 			async submitForm(formName) {
+			    console.log( this.loginForm);
 				this.$refs[formName].validate(async (valid) => {
 					if (valid) {
 						const res = await login({user_name: this.loginForm.username, password: this.loginForm.password})

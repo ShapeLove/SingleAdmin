@@ -5,14 +5,12 @@
 			<header class="section_title">数据统计</header>
 			<el-row :gutter="20" style="margin-bottom: 15px;margin-left: 50px;">
                 <el-col :span="4"><div class="data_list today_head"><span class="data_num head">当日数据：</span></div></el-col>
-				<el-col :span="4"><div class="data_list"><span class="data_num">{{userCount}}</span> 新增用户</div></el-col>
-				<el-col :span="4"><div class="data_list"><span class="data_num">{{orderCount}}</span> 新增订单</div></el-col>
-                <el-col :span="4"><div class="data_list"><span class="data_num">{{adminCount}}</span> 新增管理员</div></el-col>
+				<el-col :span="4"><div class="data_list"><span class="data_num">{{addUser}}</span> 新增用户</div></el-col>
+                <el-col :span="4"><div class="data_list"><span class="data_num">{{addAdmin}}</span> 新增管理员</div></el-col>
 			</el-row>
             <el-row :gutter="20" style="margin-left: 50px;">
                 <el-col :span="4"><div class="data_list all_head"><span class="data_num head">总数据：</span></div></el-col>
                 <el-col :span="4"><div class="data_list"><span class="data_num">{{allUserCount}}</span> 注册用户</div></el-col>
-                <el-col :span="4"><div class="data_list"><span class="data_num">{{allOrderCount}}</span> 订单</div></el-col>
                 <el-col :span="4"><div class="data_list"><span class="data_num">{{allAdminCount}}</span> 管理员</div></el-col>
             </el-row>
 		</section>
@@ -22,33 +20,52 @@
 
 <script>
 	import headTop from '../components/headTop'
-	import tendency from '../components/tendency' 
+	import tendency from '../components/tendency'
 	import dtime from 'time-formater'
 	import {userCount, orderCount, getUserCount, getOrderCount, adminDayCount, adminCount} from '@/api/getData'
+    const axios = require('axios');
+
     export default {
     	data(){
     		return {
-    			userCount: null,
-    			orderCount: null,
-                adminCount: null,
-                allUserCount: null,
-                allOrderCount: null,
-                allAdminCount: null,
-    			sevenDay: [],
-    			sevenDate: [[],[],[]],
+                addAdmin: 10,
+                addUser: 20,
+                allUserCount: 178,
+                allAdminCount: 41,
+    			sevenDay:  [  //下标七天
+                    "2019-05-08",
+                    "2019-05-09",
+                    "2019-05-10",
+                    "2019-05-11",
+                    "2019-05-12",
+                    "2019-05-13",
+                    "2019-05-14"
+                ],
+    			sevenDate: [  //三份数据  一组七天
+                    [60,83,50,48,121,162,96],
+                    [18,24,17,31,13,29,8],
+                ],
     		}
     	},
+        created(){
+            axios.post("http://shape.shpcoder.cn/admin/manager/pageList")
+                .then((response) => {
+                    console.log(response);
+                    console.log("huoqu")
+                    this.list = response.data;
+                })
+        },
     	components: {
     		headTop,
     		tendency,
     	},
     	mounted(){
     		this.initData();
-    		for (let i = 6; i > -1; i--) {
+    	/*	for (let i = 6; i > -1; i--) {
     			const date = dtime(new Date().getTime() - 86400000*i).format('YYYY-MM-DD')
     			this.sevenDay.push(date)
     		}
-    		this.getSevenData();
+    		this.getSevenData();*/
     	},
         computed: {
 
@@ -56,7 +73,7 @@
     	methods: {
     		async initData(){
     			const today = dtime().format('YYYY-MM-DD')
-    			Promise.all([userCount(today), orderCount(today), adminDayCount(today), getUserCount(), getOrderCount(), adminCount()])
+    		/*	Promise.all([userCount(today), orderCount(today), adminDayCount(today), getUserCount(), getOrderCount(), adminCount()])
     			.then(res => {
     				this.userCount = res[0].count;
     				this.orderCount = res[1].count;
@@ -66,11 +83,11 @@
                     this.allAdminCount = res[5].count;
     			}).catch(err => {
     				console.log(err)
-    			})
+    			})*/
     		},
     		async getSevenData(){
     			const apiArr = [[],[],[]];
-    			this.sevenDay.forEach(item => {
+    		/*	this.sevenDay.forEach(item => {
     				apiArr[0].push(userCount(item))
     				apiArr[1].push(orderCount(item))
                     apiArr[2].push(adminDayCount(item))
@@ -86,7 +103,7 @@
 					this.sevenDate = resArr;
     			}).catch(err => {
     				console.log(err)
-    			})
+    			})*/
     		}
     	}
     }

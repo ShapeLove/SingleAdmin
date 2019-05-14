@@ -6,23 +6,36 @@
 		      :data="tableData"
 		      style="width: 100%">
 		      <el-table-column
-		        prop="user_name"
+		        prop="adminName"
 		        label="姓名"
 		        width="180">
 		      </el-table-column>
 		      <el-table-column
-		        prop="create_time"
 		        label="注册日期"
 		        width="220">
+                  <template slot-scope="scope">
+                      <el-icon name="time"></el-icon>
+                      <span style="margin-left: 10px">{{ scope.row.create }}</span>
+                  </template>
 		      </el-table-column>
+                <el-table-column
+                    prop="tag"
+                    label="标签"
+                    width="100">
+                    <template slot-scope="scope">
+                        <el-tag
+                            :type="scope.row.tag === '家' ? 'primary' : 'success'"
+                            close-transition>{{scope.row.tag}}</el-tag>
+                    </template>
+                </el-table-column>
               <el-table-column
                 prop="city"
-                label="地址"
-                width="180">
+                label="地址">
               </el-table-column>
 		      <el-table-column
 		        prop="admin"
 		        label="权限">
+                  普通管理员
 		      </el-table-column>
 		    </el-table>
 		    <div class="Pagination" style="text-align: left;margin-top: 10px;">
@@ -45,7 +58,29 @@
     export default {
         data(){
             return {
-                tableData: [],
+                tableData: [{
+                    create: '2016-05-02',
+                    adminName: '王小虎',
+                    city: '上海市普陀区金沙江路 1518 弄',
+                    tag: '家'
+                }, {
+                    create: '2016-05-04',
+                    adminName: '王小虎',
+                    city: '上海市普陀区金沙江路 1517 弄',
+                    tag: '家'
+
+
+                }, {
+                    create: '2016-05-01',
+                    adminName: '王小虎',
+                    city: '上海市普陀区金沙江路 1519 弄',
+                    tag: '公司'
+                }, {
+                    create: '2016-05-03',
+                    adminName: '王小虎',
+                    city: '上海市普陀区金沙江路 1516 弄',
+                    tag: '家'
+                }],
                 currentRow: null,
                 offset: 0,
                 limit: 20,
@@ -60,6 +95,14 @@
             this.initData();
         },
         methods: {
+            tableRowClassName(row, index) {
+                if (index === 1) {
+                    return 'info-row';
+                } else if (index === 3) {
+                    return 'positive-row';
+                }
+                return '';
+            },
             async initData(){
                 try{
                     const countData = await adminCount();
@@ -92,7 +135,7 @@
 						        user_name: item.user_name,
 						        admin: item.admin,
                                 city: item.city,
-                    		}
+                    		};
                     		this.tableData.push(tableItem)
                     	})
                     }else{
@@ -110,6 +153,13 @@
 	@import '../style/mixin';
     .table_container{
         padding: 20px;
+    }
+    .el-table .info-row {
+        background: oldlace;
+    }
+
+    .el-table .positive-row {
+        background: #f0f9eb;
     }
 </style>
 
