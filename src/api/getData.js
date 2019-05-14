@@ -4,7 +4,7 @@ import fetch from '@/config/fetch'
  * 登陆
  */
 
-export const login = data => fetch('/admin/login', data, 'POST');
+export const login = data => fetch('/admin/login/login', data, 'POST');
 
 /**
  * 退出
@@ -16,7 +16,7 @@ export const signout = () => fetch('/admin/signout');
  * 获取用户信息
  */
 
-export const getAdminInfo = () => fetch('/admin/info');
+export const getAdminInfo = () => fetch('/admin/login/info');
 
 /**
  * api请求量
@@ -60,7 +60,7 @@ export const adminDayCount = date => fetch('/statis/admin/' + date + '/count');
  * 管理员列表
  */
 
-export const adminList = data => fetch('/admin/all', data);
+export const adminList = data => fetch('/admin/manager/pageList', data, 'POST');
 
 /**
  * 管理员数量

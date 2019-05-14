@@ -18,24 +18,9 @@
                       <span style="margin-left: 10px">{{ scope.row.create }}</span>
                   </template>
 		      </el-table-column>
-                <el-table-column
-                    prop="tag"
-                    label="标签"
-                    width="100">
-                    <template slot-scope="scope">
-                        <el-tag
-                            :type="scope.row.tag === '家' ? 'primary' : 'success'"
-                            close-transition>{{scope.row.tag}}</el-tag>
-                    </template>
-                </el-table-column>
-              <el-table-column
-                prop="city"
-                label="地址">
-              </el-table-column>
 		      <el-table-column
 		        prop="admin"
 		        label="权限">
-                  普通管理员
 		      </el-table-column>
 		    </el-table>
 		    <div class="Pagination" style="text-align: left;margin-top: 10px;">
@@ -58,29 +43,7 @@
     export default {
         data(){
             return {
-                tableData: [{
-                    create: '2016-05-02',
-                    adminName: '王小虎',
-                    city: '上海市普陀区金沙江路 1518 弄',
-                    tag: '家'
-                }, {
-                    create: '2016-05-04',
-                    adminName: '王小虎',
-                    city: '上海市普陀区金沙江路 1517 弄',
-                    tag: '家'
-
-
-                }, {
-                    create: '2016-05-01',
-                    adminName: '王小虎',
-                    city: '上海市普陀区金沙江路 1519 弄',
-                    tag: '公司'
-                }, {
-                    create: '2016-05-03',
-                    adminName: '王小虎',
-                    city: '上海市普陀区金沙江路 1516 弄',
-                    tag: '家'
-                }],
+                tableData: [],
                 currentRow: null,
                 offset: 0,
                 limit: 20,
@@ -105,12 +68,6 @@
             },
             async initData(){
                 try{
-                    const countData = await adminCount();
-                    if (countData.status == 1) {
-                        this.count = countData.count;
-                    }else{
-                        throw new Error('获取数据失败');
-                    }
                     this.getAdmin();
                 }catch(err){
                     console.log('获取数据失败', err);
@@ -126,15 +83,14 @@
             },
             async getAdmin(){
                 try{
-                    const res = await adminList({offset: this.offset, limit: this.limit});
-                    if (res.status == 1) {
+                    const res = await adminList({pageIndex: this.currentPage, pageSize:20});
+                    if (res.success) {
                     	this.tableData = [];
-                    	res.data.forEach(item => {
+                    	res.dataList.forEach(item => {
                     		const tableItem = {
-                    			create_time: item.create_time,
-						        user_name: item.user_name,
-						        admin: item.admin,
-                                city: item.city,
+                                create: item.create,
+						        adminName: item.name,
+						        admin: item.level
                     		};
                     		this.tableData.push(tableItem)
                     	})

@@ -95,15 +95,15 @@
 		},
 		mounted(){
 			this.showLogin = true;
-			// if (!this.adminInfo.id) {
-            // 	this.getAdminData()
-            // }
+			if (!this.adminInfo.id) {
+            	this.getAdminData()
+            }
 		},
 		computed: {
 			...mapState(['adminInfo']),
 		},
 		methods: {
-			// ...mapActions(['getAdminData']),
+			...mapActions(['getAdminData']),
 			async submitForm(formName) {
 			    console.log( this.loginForm);
 				this.$refs[formName].validate(async (valid) => {
