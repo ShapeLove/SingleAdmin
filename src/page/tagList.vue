@@ -18,6 +18,10 @@
                     >
                 </el-table-column>
                 <el-table-column
+                    property="tagType"
+                    label="标签类型"
+                ></el-table-column>
+                <el-table-column
                     property="tagName"
                     label="标签名称"
                     >
@@ -40,12 +44,13 @@
                 <el-pagination
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
-                    :current-page="currentPage"
-                    :page-size="20"
+                    :current-page="queryData.pageIndex"
+                    :page-size="queryData.pageSize"
                     layout="total, prev, pager, next"
                     :total="count">
                 </el-pagination>
             </div>
+
             <el-dialog
                 title="添加标签名"
                 :visible.sync="centerDialogVisible"
@@ -56,11 +61,21 @@
                     <el-form-item label="标签名">
                         <el-input v-model="formInline.tagName" placeholder="请输入标签名..."></el-input>
                     </el-form-item>
+                    <el-form-item label="标签类型">
+                        <el-select v-model="formInline.tagType" placeholder="请选择标签类型">
+                            <el-option
+                                v-for="item in tagOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
                 </el-form>
 
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="centerDialogVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="closeAddTag">确 定</el-button>
+                    <el-button type="primary" @click="addTag">确 定</el-button>
                  </span>
             </el-dialog>
         </div>
@@ -70,37 +85,26 @@
 <script>
     import headTop from '../components/headTop'
     import {baseUrl, baseImgPath} from '@/config/env'
-    import {cityGuess, getResturants, getResturantsCount, foodCategory, updateResturant, searchplace, deleteResturant} from '@/api/getData'
+    import {tagManage} from '@/api/getData'
     export default {
         data(){
             return {
                 centerDialogVisible: false,
                 formInline:{
                     tagName: '',
-                    time: ''
+                    tagType: null
                 },
-                tableData: [{
-                    create: '2016-05-02',
-                    tagName: '帅哥',
-                    city: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    create: '2016-05-04',
-                    tagName: '美女',
-                    city: '上海市普陀区金沙江路 1517 弄'
-                }, {
-                    create: '2016-05-01',
-                    tagName: '唱歌',
-                    city: '上海市普陀区金沙江路 1519 弄'
-                }, {
-                    create: '2016-05-03',
-                    tagName: '跳舞',
-                    city: '上海市普陀区金沙江路 1516 弄'
-                }],
-                currentRow: null,
-                offset: 0,
-                limit: 20,
+                tableData: [],
                 count: 0,
-                currentPage: 1,
+                queryData: {
+                    pageIndex: 0,
+                    pageSize: 10
+                },
+                tagOptions: [
+                    {value: 1, label: "正在做..."},
+                    {value: 2, label: "打算做..."},
+                    {value: 3, label: "我的活动...."}
+                ]
             }
         },
         created(){
@@ -121,19 +125,29 @@
                 }
                 return '';
             },
-            closeAddTag(){
+            async addTag(){
+                try {
+                    const res = tagManage.addTag(this.formInline);
+                    if (res.success) {
+                        this.$message({
+                            type: 'success',
+                            message: '删除标签成功'
+                        });
+                        this.initData();
+                    }else {
+                        throw new Error(res.message);
+                    }
+                }catch (err) {
+                    this.$message({
+                        type: 'error',
+                        message: err.message
+                    });
+                }
                 this.centerDialogVisible = false;
             },
             //获取标签信息
             async initData(){
                 try{
-                    this.city = await cityGuess();
-                    const countData = await getResturantsCount();
-                    if (countData.status == 1) {
-                        this.count = countData.count;
-                    }else{
-                        throw new Error('获取数据失败');
-                    }
                     this.getTag();
                 }catch(err){
                     console.log('获取数据失败', err);
@@ -141,43 +155,25 @@
             },
             //获取标签数据
             async getTag(){
-                const {latitude, longitude} = this.city;
-                const restaurants = await getTag({latitude, longitude, offset: this.offset, limit: this.limit});
-                this.tableData = [];
-                console.log(restaurants)
-                restaurants.forEach(item => {
-                    const tableData = {};
-                    tableData.name = item.name;
-                    tableData.address = item.address;
-                    tableData.description = item.description;
-                    tableData.id = item.id;
-                    tableData.phone = item.phone;
-                    tableData.rating = item.rating;
-                    tableData.recent_order_num = item.recent_order_num;
-                    tableData.category = item.category;
-                    tableData.image_path = item.image_path;
-                    this.tableData.push(tableData);
-                });
-                console.log(this.tableData)
-
+                const result = await tagManage.getTagList(this.queryData);
+                if (result.success) {
+                    this.tableData = result.dataList;
+                    this.count = result.totalCount;
+                }
             },
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`);
             },
 
             handleCurrentChange(val) {
-                this.currentPage = val;
-                this.offset = (val - 1)*this.limit;
+                this.queryData.pageIndex = val;
                 this.getTag()
-            },
-            addTag(index, row){
-                this.$router.push({ path: 'addTag', query: { restaurant_id: row.id }})
             },
             async handleDelete(index, row) {
                 console.log( index);
                 try{
-                    const res = await deleteResturant(row.id);
-                    if (res.status == 1) {
+                    const res = await tagManage.deleteTag({"id":row.id, "tagType": row.tagType});
+                    if (res.success) {
                         this.$message({
                             type: 'success',
                             message: '删除标签成功'
@@ -193,27 +189,7 @@
                     });
                     console.log('删除标签失败')
                 }
-            },
-            async querySearchAsync(queryString, cb) {
-                if (queryString) {
-                    try{
-                        const cityList = await searchplace(this.city.id, queryString);
-                        if (cityList instanceof Array) {
-                            cityList.map(item => {
-                                item.value = item.address;
-                                return item;
-                            });
-                            cb(cityList)
-                        }
-                    }catch(err){
-                        console.log(err)
-                    }
-                }
-            },
-            addressSelect(vale){
-                const {address, latitude, longitude} = vale;
-                this.address = {address, latitude, longitude};
-            },
+            }
         },
     }
 </script>

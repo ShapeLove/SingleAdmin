@@ -1,4 +1,5 @@
 import fetch from '@/config/fetch'
+import axios from 'axios'
 
 /**
  * 登陆
@@ -227,3 +228,12 @@ export const getAddressById = address_id => fetch('/v1/addresse/' + address_id);
 
 export const getUserCity = () => fetch('/v1/user/city/count');
 export const getTestExcept = () => fetch('/except/list');
+
+/**
+ * 标签
+ */
+export const tagManage = {
+    getTagList: data => fetch('/admin/tag/pageList', data, 'POST'),
+    deleteTag: data => fetch('/admin/tag/deleteTag', data, 'POST'),
+    addTag: data => axios.post('/admin/tag/addTag', data)
+}

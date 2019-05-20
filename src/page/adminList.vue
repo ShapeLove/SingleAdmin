@@ -28,7 +28,7 @@
                   @size-change="handleSizeChange"
                   @current-change="handleCurrentChange"
                   :current-page="currentPage"
-                  :page-size="20"
+                  :page-size="size"
                   layout="total, prev, pager, next"
                   :total="count">
                 </el-pagination>
@@ -45,9 +45,8 @@
             return {
                 tableData: [],
                 currentRow: null,
-                offset: 0,
-                limit: 20,
                 count: 0,
+                size: 10,
                 currentPage: 1,
             }
         },
@@ -78,14 +77,14 @@
             },
             handleCurrentChange(val) {
                 this.currentPage = val;
-                this.offset = (val - 1)*this.limit;
                 this.getAdmin()
             },
             async getAdmin(){
                 try{
-                    const res = await adminList({pageIndex: this.currentPage, pageSize:20});
+                    const res = await adminList({pageIndex: this.currentPage, pageSize: this.size});
                     if (res.success) {
                     	this.tableData = [];
+                    	this.count= res.totalCount;
                     	res.dataList.forEach(item => {
                     		const tableItem = {
                                 create: item.create,
