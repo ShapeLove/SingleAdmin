@@ -1,11 +1,11 @@
 import fetch from '@/config/fetch'
-import axios from 'axios'
+import axioss from '@/config/axioss'
 
 /**
  * 登陆
  */
 
-export const login = data => fetch('/admin/login/login', data, 'POST');
+export const login = data => axioss('/admin/login/login', data, 'POST');
 
 /**
  * 退出
@@ -17,7 +17,7 @@ export const signout = () => fetch('/admin/signout');
  * 获取用户信息
  */
 
-export const getAdminInfo = () => fetch('/admin/login/info');
+export const getAdminInfo = () => axioss('/admin/login/info');
 
 /**
  * api请求量
@@ -233,7 +233,11 @@ export const getTestExcept = () => fetch('/except/list');
  * 标签
  */
 export const tagManage = {
-    getTagList: data => fetch('/admin/tag/pageList', data, 'POST'),
-    deleteTag: data => fetch('/admin/tag/deleteTag', data, 'POST'),
-    addTag: data => axios.post('/admin/tag/addTag', data)
+    getTagList: data => axioss('/admin/tag/pageList', data, 'POST'),
+    deleteTag: data => axioss('/admin/tag/deleteTag', data, 'POST'),
+    addTag: data => axioss('/admin/tag/addTag', data, 'POST')
+}
+
+export const reportManage = {
+    getReportList: data => axioss('/admin/report/pageList', data, 'POST')
 }

@@ -82,6 +82,7 @@
 					username: '',
 					password: '',
 				},
+                path: null,
 				rules: {
 					username: [
 			            { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -94,6 +95,10 @@
 			}
 		},
 		mounted(){
+	        let path = this.$route.query.path;
+	        if (path) {
+	            this.path = path;
+            }
 			this.showLogin = true;
 			if (!this.adminInfo.id) {
             	this.getAdminData()
@@ -110,7 +115,12 @@
 					if (valid) {
 						const res = await login({name: this.loginForm.username, passwd: this.loginForm.password})
                         if (res.success) {
-                            this.$router.push('manage')
+                            if (this.path) {
+                                this.$router.replace(this.path)
+                            }else {
+                                this.$router.replace('manage')
+                            }
+
                         }else {
                             this.$message({
                                 type: 'error',
@@ -135,7 +145,11 @@
                         type: 'success',
                         message: '检测到您之前登录过，将自动登录'
                     });
-					this.$router.replace('manage')
+                    if (this.path) {
+                        this.$router.replace(this.path)
+                    }else {
+                        this.$router.replace('manage')
+                    }
 				}
 			}
 		}

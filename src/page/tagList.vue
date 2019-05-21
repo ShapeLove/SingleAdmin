@@ -127,11 +127,11 @@
             },
             async addTag(){
                 try {
-                    const res = tagManage.addTag(this.formInline);
+                    const res = await tagManage.addTag(this.formInline);
                     if (res.success) {
                         this.$message({
                             type: 'success',
-                            message: '删除标签成功'
+                            message: '添加标签成功'
                         });
                         this.initData();
                     }else {
@@ -156,6 +156,7 @@
             //获取标签数据
             async getTag(){
                 const result = await tagManage.getTagList(this.queryData);
+                console.log(result)
                 if (result.success) {
                     this.tableData = result.dataList;
                     this.count = result.totalCount;
