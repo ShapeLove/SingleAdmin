@@ -6,54 +6,46 @@
                 :data="tableData"
                 highlight-current-row
                 style="width: 100%">
-                <el-table-column type="expand">
-                    <template slot-scope="props">
-                        <el-form label-position="left" inline class="demo-table-expand">
-                            <el-form-item label="举报人">
-                                <span>{{ props.row.open_id }}</span>
-                            </el-form-item>
-                            <el-form-item label="被举报人">
-                                <span>{{ props.row.report_open_id  }}</span>
-                            </el-form-item>
-                            <el-form-item label="时间">
-                                <span>{{ props.row.create  }}</span>
-                            </el-form-item>
-                        </el-form>
-                    </template>
-                </el-table-column>
                 <el-table-column
                     type="index"
-                    width="100">
+                    width="50">
                 </el-table-column>
                 <el-table-column
-                    property="open_id"
+                    property="openId"
                     label="举报人"
                 >
                 </el-table-column>
                 <el-table-column
-                    property="report_open_id"
+                    property="reportOpenId"
                     label="被举报人"
                 >
                 </el-table-column>
                 <el-table-column
-                    property="report_type"
+                    property="reportType"
                     label="举报类型"
                 >
                 </el-table-column>
                 <el-table-column
                     property="create"
                     label="举报时间"
+                ></el-table-column>
+                <el-table-column
+                    property="status"
+                    label="审核状态"
                 >
                 </el-table-column>
-                <el-table-column label="操作" >
+                <el-table-column label="操作" width="200">
                     <template slot-scope="scope">
                         <el-button
                             size="small"
                             @click="handlePass(scope.row)" >通过</el-button>
                         <el-button
                             size="small"
+                            @click="refuseReport(scope.row)">驳回</el-button>
+                        <el-button
+                            size="small"
                             type="danger"
-                            @click="refuseReport(scope.$index, scope.row)">驳回</el-button>
+                            @click="deleteReport(scope.row.id)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -61,8 +53,8 @@
                 <el-pagination
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
-                    :current-page="currentPage"
-                    :page-size="20"
+                    :current-page="queryData.pageIndex"
+                    :page-size="queryData.pageSize"
                     layout="total, prev, pager, next"
                     :total="count">
                 </el-pagination>
@@ -91,7 +83,7 @@
 <script>
     import headTop from '../components/headTop'
     import {baseUrl, baseImgPath} from '@/config/env'
-    import {} from '@/api/getData'
+    import {reportManage} from '@/api/getData'
     export default {
         data(){
             return {
@@ -99,27 +91,7 @@
                 formInline:{
                     reason: '',
                 },
-                tableData: [{
-                    create: '2016-05-02',
-                    report_open_id: '张颖',
-                    open_id: '自己',
-                    report_type:'3'
-                }, {
-                    create: '2016-05-02',
-                    report_open_id: '赵武',
-                    open_id: '李四',
-                    report_type:'2'
-                }, {
-                    create: '2016-05-02',
-                    report_open_id: '杜德伟',
-                    open_id: '赵雪',
-                    report_type:'2'
-                }, {
-                    create: '2016-05-13',
-                    report_open_id: '张三',
-                    open_id: '梨子',
-                    report_type:'1'
-                }],
+                tableData: [],
                 currentRow: null,
                 offset: 0,
                 limit: 20,
@@ -145,80 +117,65 @@
                 this.centerDialogVisible = false;
                 console.log("驳回" + this.formInline.reason)
             },
-            //驳回
-            refuseReport(){
-                this.centerDialogVisible = true;
-
+            async deleteReport(rowId) {
+                const res = await reportManage.handleReport({"id": row.id, "status": 2});
             },
-            //获取标签信息
+            //驳回
+            async refuseReport(row){
+                const res = await reportManage.handleReport({"id": row.id, "status": 2});
+                if (res.success) {
+                    this.$message({
+                        type: 'success',
+                        message: '处理成功!'
+                    });
+                    this.getReport()
+                }else {
+                    this.$message({
+                        type: 'error',
+                        message: res.message
+                    });
+                }
+            },
+            //获取举报信息
             async initData(){
                 try{
-                    this.city = await cityGuess();
-                    const countData = await getResturantsCount();
-                    if (countData.status == 1) {
-                        this.count = countData.count;
-                    }else{
-                        throw new Error('获取数据失败');
-                    }
-                    this.getTag();
+                    this.getReport();
                 }catch(err){
                     console.log('获取数据失败', err);
                 }
             },
-            //获取标签数据
-            async getTag(){
-                const {latitude, longitude} = this.city;
-                const restaurants = await getTag({latitude, longitude, offset: this.offset, limit: this.limit});
-                this.tableData = [];
-                console.log(restaurants)
-                restaurants.forEach(item => {
-                    const tableData = {};
-                    tableData.name = item.name;
-                    tableData.address = item.address;
-                    tableData.description = item.description;
-                    tableData.id = item.id;
-                    tableData.phone = item.phone;
-                    tableData.rating = item.rating;
-                    tableData.recent_order_num = item.recent_order_num;
-                    tableData.category = item.category;
-                    tableData.image_path = item.image_path;
-                    this.tableData.push(tableData);
-                });
-                console.log(this.tableData)
-
+            //获取举报数据
+            async getReport(){
+                const res = await reportManage.getReportList(this.queryData);
+                if (res.success) {
+                    this.tableData = res.dataList;
+                    this.count = res.totalCount;
+                }
             },
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`);
             },
-            handlePass(row){
-                this.$message({
-                    type: 'success',
-                    message: '举报成功!'
-                });
+            async handlePass(row){
+                const res = await reportManage.handleReport({"id": row.id, "status": 1});
+                if (res.success) {
+                    this.$message({
+                        type: 'success',
+                        message: '处理成功!'
+                    });
+                    this.getReport()
+                }else {
+                    this.$message({
+                        type: 'error',
+                        message: res.message
+                    });
+                }
             },
             handleCurrentChange(val) {
-                this.currentPage = val;
-                this.offset = (val - 1)*this.limit;
+                this.queryData.pageIndex = val;
                 this.getTag()
             },
             addTag(index, row){
                 this.$router.push({ path: 'addTag', query: { restaurant_id: row.id }})
-            },
-            async querySearchAsync(queryString, cb) {
-                if (queryString) {
-                    try{
-                        const cityList = await searchplace(this.city.id, queryString);
-                        if (cityList instanceof Array) {
-                            cityList.map(item => {
-                                item.value = item.address;
-                                return item;
-                            });
-                            cb(cityList)
-                        }
-                    }catch(err){
-                        console.log(err)
-                    }
-                }
             }
         },
     }

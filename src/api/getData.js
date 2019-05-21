@@ -238,6 +238,12 @@ export const tagManage = {
     addTag: data => axioss('/admin/tag/addTag', data, 'POST')
 }
 
+/**
+ * 举报管理
+ * @type {{getReportList: (function(*=))}}
+ */
 export const reportManage = {
-    getReportList: data => axioss('/admin/report/pageList', data, 'POST')
+    getReportList: data => axioss('/admin/report/pageList', data, 'POST'),
+    handleReport: data => axioss('/admin/report/handleReport', data, 'POST'),
+    deleteReport: data => axioss('/admin/report/deleteReport', data, 'POST')
 }
