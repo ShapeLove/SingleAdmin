@@ -13,13 +13,13 @@
                   width="100">
                 </el-table-column>
                 <el-table-column
-                  property="registe_time"
-                  label="注册日期"
+                  property="openId"
+                  label="唯一标识"
                   width="220">
                 </el-table-column>
                 <el-table-column
-                  property="username"
-                  label="用户姓名"
+                  property="name"
+                  label="用户昵称"
                   width="220">
                 </el-table-column>
                 <el-table-column

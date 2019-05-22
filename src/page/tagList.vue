@@ -97,7 +97,7 @@
                 tableData: [],
                 count: 0,
                 queryData: {
-                    pageIndex: 0,
+                    pageIndex: 1,
                     pageSize: 10
                 },
                 tagOptions: [
@@ -167,6 +167,7 @@
             },
 
             handleCurrentChange(val) {
+                console.log("1212");
                 this.queryData.pageIndex = val;
                 this.getTag()
             },
@@ -179,7 +180,7 @@
                             type: 'success',
                             message: '删除标签成功'
                         });
-                        this.tableData.splice(index, 1);
+                        this.getTag();
                     }else{
                         throw new Error(res.message)
                     }

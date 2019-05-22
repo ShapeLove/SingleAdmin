@@ -16,6 +16,7 @@ const tagList = r => require.ensure([], () => r(require('@/page/tagList')), 'tag
 const test = r => require.ensure([], () => r(require('@/page/test')), 'test');
 const reportCheck = r => require.ensure([], () => r(require('@/page/reportCheck')), 'reportCheck');
 const warning = r => require.ensure([], () => r(require('@/page/warning')), 'warning');
+const userInfo = r => require.ensure([], () => r(require('@/page/userInfo')), 'userInfo');
 const routes = [
 	{
 		path: '/',
@@ -24,6 +25,10 @@ const routes = [
     {
         path: '/test',
         component: test
+    },
+    {
+        path: '/userInfo',
+        component: userInfo
     },
 	{
 		path: '/manage',

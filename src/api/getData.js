@@ -247,3 +247,12 @@ export const reportManage = {
     handleReport: data => axioss('/admin/report/handleReport', data, 'POST'),
     deleteReport: data => axioss('/admin/report/deleteReport', data, 'POST')
 };
+
+/**
+ * 异常管理
+ * @type {{getExceptList: (function(*=)), deleteExcept: (function(*=))}}
+ */
+export const exceptManage = {
+    getExceptList: data => axioss('/admin/except/pageList', data, 'POST'),
+    deleteExcept: data => axioss('/admin/except/deleteExcept', data, 'POST')
+};

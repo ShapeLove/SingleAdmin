@@ -16,9 +16,11 @@
                 >
                 </el-table-column>
                 <el-table-column
-                    property="reportOpenId"
                     label="被举报人"
                 >
+                    <template slot-scope="scope">
+                        <a href="/userInfo" target="_blank">{{scope.row.reportOpenId}}</a>
+                    </template>
                 </el-table-column>
                 <el-table-column
                     property="reportType"
@@ -98,7 +100,7 @@
                 count: 0,
                 currentPage: 1,
                 queryData: {
-                    pageIndex: 0,
+                    pageIndex: 1,
                     pageSize: 10
                 },
             }
@@ -110,13 +112,6 @@
             headTop,
         },
         methods: {
-            open(){
-
-            },
-            closeReason(){
-                this.centerDialogVisible = false;
-                console.log("驳回" + this.formInline.reason)
-            },
             async deleteReport(rowId) {
                 const res = await reportManage.deleteReport({"id": rowId});
                 if (res.success) {
@@ -164,9 +159,6 @@
                     this.count = res.totalCount;
                 }
             },
-            handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
-            },
             async handlePass(row){
                 const res = await reportManage.handleReport({"id": row.id, "status": 1});
                 if (res.success) {
@@ -185,9 +177,6 @@
             handleCurrentChange(val) {
                 this.queryData.pageIndex = val;
                 this.getTag()
-            },
-            addTag(index, row){
-                this.$router.push({ path: 'addTag', query: { restaurant_id: row.id }})
             }
         },
     }

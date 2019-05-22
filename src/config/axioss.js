@@ -1,16 +1,15 @@
 import { baseUrl } from './env'
 import axios from 'axios'
 import router from '@/router'
-
+let config = {
+    baseURL:  baseUrl,
+    // timeout: 60 * 1000, // Timeout
+    withCredentials: true, // Check cross-site Access-Control
+};
+const _axios = axios.create(config);
 export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
     console.log(router);
     type = type.toUpperCase();
-    let config = {
-        baseURL:  baseUrl,
-        // timeout: 60 * 1000, // Timeout
-        withCredentials: true, // Check cross-site Access-Control
-    };
-    const _axios = axios.create(config);
     if (type === 'GET') {
         let dataStr = ''; //数据拼接字符串
         Object.keys(data).forEach(key => {
