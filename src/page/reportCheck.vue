@@ -118,7 +118,19 @@
                 console.log("驳回" + this.formInline.reason)
             },
             async deleteReport(rowId) {
-                const res = await reportManage.handleReport({"id": row.id, "status": 2});
+                const res = await reportManage.deleteReport({"id": rowId});
+                if (res.success) {
+                    this.$message({
+                        type: 'success',
+                        message: '处理成功!'
+                    });
+                    this.getReport()
+                }else {
+                    this.$message({
+                        type: 'error',
+                        message: res.message
+                    });
+                }
             },
             //驳回
             async refuseReport(row){

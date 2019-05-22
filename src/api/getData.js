@@ -236,14 +236,14 @@ export const tagManage = {
     getTagList: data => axioss('/admin/tag/pageList', data, 'POST'),
     deleteTag: data => axioss('/admin/tag/deleteTag', data, 'POST'),
     addTag: data => axioss('/admin/tag/addTag', data, 'POST')
-}
+};
 
 /**
  * 举报管理
- * @type {{getReportList: (function(*=))}}
+ * @type {{getReportList: (function(*=)), handleReport: (function(*=)), deleteReport: (function(*=))}}
  */
 export const reportManage = {
     getReportList: data => axioss('/admin/report/pageList', data, 'POST'),
     handleReport: data => axioss('/admin/report/handleReport', data, 'POST'),
     deleteReport: data => axioss('/admin/report/deleteReport', data, 'POST')
-}
+};
