@@ -5,58 +5,78 @@
             <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
-
                 highlight-current-row
                 style="width: 100%">
                 <el-table-column
                   type="index"
+                  align="center"
                   width="100">
                 </el-table-column>
                 <el-table-column
                   property="openId"
                   label="唯一标识"
+                  align="center"
                   width="220">
                 </el-table-column>
-                <el-table-column
+                               <el-table-column
                   property="name"
                   label="用户昵称"
+                  align="center"
                   width="220">
                 </el-table-column>
                 <el-table-column
-                  property="city"
-                  label="注册地址">
-
-                </el-table-column>
-                <el-table-column
-                    property="state"
                     label="审核状态"
+                    align="center"
                     width="100">
                     <template slot-scope="scope">
                         <el-tag
-                            :type="changeState(scope.row.state)"
-                            close-transition>{{scope.row.state}}</el-tag>
+                            :type="changeState(scope.row.status)"
+                            close-transition>{{getStatusStr(scope.row.status)}}</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" >
+                <el-table-column
+                  property="rejectReason"
+                  align="center"
+                  label="驳回原因">
+                </el-table-column>
+                <el-table-column
+                    label="用户状态"
+                    align="center"
+                    width="100">
+                    <template slot-scope="scope">
+                        <el-tag
+                            :type="scope.row.yn === 0 ? 'success': 'error'"
+                            close-transition>{{scope.row.yn === 0 ? "正常": "封禁"}}</el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" align="center">
                     <template slot-scope="scope" >
                         <el-button
                             size="small"
-                            @click="handleAccess(scope.row)" v-if="scope.row.state==='待审核' ? true : false" >通过</el-button>
+                            @click="handleAccess(scope.row)" v-if="scope.row.status===0" >通过</el-button>
                         <el-button
                             size="small"
                             type="danger"
-                            @click="handleRefuse(scope.$index, scope.row)"
-                            v-if="scope.row.state==='待审核' ? true : false">驳回</el-button>
+                            @click="handleRefuse(scope.row)"
+                            v-if="scope.row.status===0">驳回</el-button>
+                        <el-button
+                            size="small"
+                            type="danger"
+                            @click="handleForbid(scope.row)"
+                            v-if="scope.row.status===1 && scope.row.yn === 0">封禁</el-button>
+                        <el-button
+                            size="small"
+                            @click="handleUnForbid(scope.row)"
+                            v-if="scope.row.yn===1">解封</el-button>
                     </template>
                 </el-table-column>
             </el-table>
 
             <div class="Pagination" style="text-align: left;margin-top: 10px;">
                 <el-pagination
-                  @size-change="handleSizeChange"
                   @current-change="handleCurrentChange"
-                  :current-page="currentPage"
-                  :page-size="20"
+                  :current-page="queryData.pageIndex"
+                  :page-size="queryData.pageSize"
                   layout="total, prev, pager, next"
                   :total="count">
                 </el-pagination>
@@ -67,40 +87,30 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {getUserList, getUserCount} from '@/api/getData'
+    import {userManage} from '@/api/getData'
     export default {
         data(){
             return {
-                tableData: [{
-                  registe_time: '2016-05-02',
-                  username: '王小虎',
-                  city: '上海市普陀区金沙江路 1518 弄',
-                    state:'待审核'
-                }, {
-                  registe_time: '2016-05-04',
-                  username: '王小虎',
-                  city: '上海市普陀区金沙江路 1517 弄', state:'已驳回'
-                }, {
-                  registe_time: '2016-05-01',
-                  username: '王小虎',
-                  city: '上海市普陀区金沙江路 1519 弄', state:'已通过'
-                }, {
-                  registe_time: '2016-05-03',
-                  username: '王小虎',
-                  city: '上海市普陀区金沙江路 1516 弄', state:'待审核'
-                }],
-                currentRow: null,
-                offset: 0,
-                limit: 20,
+                tableData: [],
                 count: 0,
-                currentPage: 1,
+                queryData: {
+                    pageIndex: 1,
+                    pageSize: 10
+                },
+                statusList: [
+                    { value: 0, desc: "待审核", type: "primary"},
+                    { value: 1, desc: "审核通过", type: "success"},
+                    { value: 2, desc: "驳回", type: "error"}
+                ]
             }
         },
     	components: {
     		headTop,
     	},
+        computed: {
+
+        },
         created(){
-            console.log(JSON.stringify(this.tableData));
             this.initData();
         },
         methods: {
@@ -112,90 +122,95 @@
                 }
                 return '';
             },
+            getStatusStr(status) {
+              return this.statusList.find(st => st.value === status).desc;
+            },
+            async handleUserStatus(data) {
+                const res = await userManage.handleUserStatus(data);
+                if (res.success) {
+                    this.initData();
+                    this.$message({
+                        type: 'success',
+                        message: '操作成功!'
+                    });
+                }else {
+                    this.$message({
+                        type: 'error',
+                        message: res.message ? res.message : "操作失败,请稍后重试!"
+                    });
+                }
+            },
+            async handleUserEffect(data) {
+                const res = await userManage.handleUserEffect(data);
+                if (res.success) {
+                    this.initData();
+                    this.$message({
+                        type: 'success',
+                        message: '操作成功!'
+                    });
+                }else {
+                    this.$message({
+                        type: 'error',
+                        message: res.message ? res.message : "操作失败,请稍后重试!"
+                    });
+                }
+            },
             handleAccess(row){
-                this.$confirm('此操作将永久通过审核, 是否继续?', '提示', {
+                this.$confirm('此操作将通过审核, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$message({
-                        type: 'success',
-                        message: '通过成功!'
-                    });
+                    this.handleUserStatus({"openId": row.openId, "status": 1});
                 }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消通过'
-                    });
+                });
+            },
+            handleForbid(row) {
+                this.$confirm('此操作将用户封禁, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.handleUserEffect({"openId": row.openId, "yn": 1});
+                }).catch(() => {
+                });
+            },
+            handleUnForbid(row) {
+                this.$confirm('此操作将用户解封, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.handleUserEffect({"openId": row.openId, "yn": 0});
+                }).catch(() => {
                 });
             },
             changeState(state){
-                if(state ==='待审核'){
-                    return 'primary';
-                } else if(state ==='已通过'){
-                    return  'success';
-                } else {
-                    return  'error';
-                }
+                return this.statusList.find(st => st.value === state).type;
             },
-            /*async */handleRefuse(index, row) {
-                console.log( index);
-                this.tableData[index].state = "已驳回";
-                console.log(this.tableData[index].state)
-                /*     try{
-                         const res = await deleteResturant(row.id);
-                         if (res.status == 1) {
-                             this.$message({
-                                 type: 'success',
-                                 message: '删除标签成功'
-                             });
-                             this.tableData.splice(index, 1);
-                         }else{
-                             throw new Error(res.message)
-                         }
-                     }catch(err){
-                         this.$message({
-                             type: 'error',
-                             message: err.message
-                         });
-                         console.log('删除标签失败')
-                     }*/
+            handleRefuse(row) {
+                this.$prompt('请输入驳回原因', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                }).then(({ value }) => {
+                    this.handleUserStatus({"openId": row.openId, "status": 2, "rejectReason": value})
+                }).catch(() => {
+                });
             },
             async initData(){
                 try{
-                   const countData = await getUserCount(); //获取总数量
-                    console.log(JSON.stringify(countData));
-                    if (countData.status == 1) {
-                        this.count = countData.count;
-                    }else{
-                        throw new Error('获取数据失败');
+                   const res = await userManage.getUserList(this.queryData); //获取总数量
+                    if (res.success) {
+                        this.count = res.totalCount;
+                        this.tableData = res.dataList;
                     }
-                   // this.getUsers();
                 }catch(err){
                     console.log('获取数据失败', err);
                 }
             },
-            handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
-            },
             handleCurrentChange(val) {
-                this.currentPage = val;
-                this.offset = (val - 1)*this.limit;
-               // this.getUsers()
-            },
-
-            async getUsers(){
-                const Users = await getUserList({offset: this.offset, limit: this.limit}); //
-                console.log(Users);
-                this.tableData = [];
-                Users.forEach(item => {
-                    const tableData = {};
-                    tableData.username = item.username;
-                    tableData.registe_time = item.registe_time;
-                    tableData.city = item.city;
-                    tableData.city = item.city;
-                    this.tableData.push(tableData);
-                })
+                this.queryData.pageIndex = val;
+               this.initData();
             }
         },
     }

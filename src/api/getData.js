@@ -256,3 +256,13 @@ export const exceptManage = {
     getExceptList: data => axioss('/admin/except/pageList', data, 'POST'),
     deleteExcept: data => axioss('/admin/except/deleteExcept', data, 'POST')
 };
+
+/**
+ * 用戶管理
+ * @type {{getUserList: (function(*=))}}
+ */
+export const userManage = {
+   getUserList: data => axioss('/admin/user/list', data, 'POST'),
+   handleUserStatus: data => axioss('/admin/user/updateUserStatus', data, 'POST'),
+   handleUserEffect: data => axioss('/admin/user/updateUserEffect', data, 'POST')
+};
