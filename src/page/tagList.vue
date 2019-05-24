@@ -2,6 +2,19 @@
     <div class="fillcontain">
         <head-top></head-top>
         <div class="table_container">
+            <el-form :inline="true" :model="queryData" class="demo-form-inline">
+                <el-form-item label="标签类型">
+                    <el-form-item label="活动区域">
+                        <el-select v-model="formInline.region" placeholder="活动区域">
+                            <el-option label="区域一" value="shanghai"></el-option>
+                            <el-option label="区域二" value="beijing"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="initData">查询</el-button>
+                </el-form-item>
+            </el-form>
             <el-button type="primary" plain @click="open" style="margin-bottom: 10px;">添加标签</el-button>
             <el-table
                 :data="tableData"

@@ -74,7 +74,7 @@ export const adminCount = () => fetch('/admin/count');
  */
 
 export const cityGuess = () => fetch('/v1/cities', {
-	type: 'guess'
+    type: 'guess'
 });
 
 /**
@@ -88,9 +88,9 @@ export const addShop = data => fetch('/shopping/addShop', data, 'POST');
  */
 
 export const searchplace = (cityid, value) => fetch('/v1/pois', {
-	type: 'search',
-	city_id: cityid,
-	keyword: value
+    type: 'search',
+    city_id: cityid,
+    keyword: value
 });
 
 /**
@@ -214,7 +214,7 @@ export const getOrderCount = data => fetch('/bos/orders/count', data);
  * 获取用户信息
  */
 
-export const getUserInfo = user_id => fetch('/v1/user/' + user_id);
+export const getUserInfo = open_id => fetch('/admin/user/queryUserInfo' + user_id);
 
 /**
  * 获取地址信息
@@ -262,7 +262,8 @@ export const exceptManage = {
  * @type {{getUserList: (function(*=))}}
  */
 export const userManage = {
-   getUserList: data => axioss('/admin/user/list', data, 'POST'),
-   handleUserStatus: data => axioss('/admin/user/updateUserStatus', data, 'POST'),
-   handleUserEffect: data => axioss('/admin/user/updateUserEffect', data, 'POST')
+    getUserList: data => axioss('/admin/user/list', data, 'POST'),
+    handleUserStatus: data => axioss('/admin/user/updateUserStatus', data, 'POST'),
+    handleUserEffect: data => axioss('/admin/user/updateUserEffect', data, 'POST'),
+    getUserInfo: open_id => axioss('/admin/user/queryUserInfo', {"openId": open_id}, 'POST')
 };

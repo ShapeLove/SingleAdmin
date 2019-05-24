@@ -14,12 +14,15 @@
                     property="openId"
                     label="举报人"
                 >
+                    <template slot-scope="scope">
+                        <el-button style="white-space: inherit; line-height: 1.2;" type="text" @click="openUserInfoPage(scope.row.openId)">{{scope.row.openId}}</el-button>
+                    </template>
                 </el-table-column>
                 <el-table-column
                     label="被举报人"
                 >
                     <template slot-scope="scope">
-                        <a href="/userInfo" target="_blank">{{scope.row.reportOpenId}}</a>
+                        <el-button style="white-space: inherit; line-height: 1.2;" type="text" @click="openUserInfoPage(scope.row.reportOpenId)">{{scope.row.reportOpenId}}</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -158,6 +161,9 @@
                     this.tableData = res.dataList;
                     this.count = res.totalCount;
                 }
+            },
+            openUserInfoPage(openId) {
+               window.open('/userInfo?openId=' + openId, '_blank');
             },
             async handlePass(row){
                 const res = await reportManage.handleReport({"id": row.id, "status": 1});

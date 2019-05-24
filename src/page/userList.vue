@@ -2,6 +2,30 @@
     <div class="fillcontain">
         <head-top></head-top>
         <div class="table_container">
+            <div style="margin-left: 20px;">
+                <el-form ref="form" :model="queryData" class="demo-form-inline" :inline="true">
+                    <el-form-item label="昵称">
+                        <el-input v-model="queryData.name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="审核状态">
+                        <el-select v-model="queryData.status" clearable>
+                            <template v-for="item in statusList">
+                                <el-option :label="item.desc" :value="item.value"></el-option>
+                            </template>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="用户状态">
+                        <el-select v-model="queryData.yn" clearable>
+                            <template v-for="item in ynList">
+                                <el-option :label="item.desc" :value="item.value"></el-option>
+                            </template>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="initData">查询</el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
             <el-table
                 :data="tableData"
                 :row-class-name="tableRowClassName"
@@ -17,6 +41,9 @@
                   label="唯一标识"
                   align="center"
                   width="220">
+                    <template slot-scope="scope">
+                        <el-button style="white-space: inherit; line-height: 1.2" type="text" @click="openUserInfoPage(scope.row.openId)">{{scope.row.openId}}</el-button>
+                    </template>
                 </el-table-column>
                                <el-table-column
                   property="name"
@@ -94,6 +121,9 @@
                 tableData: [],
                 count: 0,
                 queryData: {
+                    name: "",
+                    status: null,
+                    yn:null,
                     pageIndex: 1,
                     pageSize: 10
                 },
@@ -101,6 +131,10 @@
                     { value: 0, desc: "待审核", type: "primary"},
                     { value: 1, desc: "审核通过", type: "success"},
                     { value: 2, desc: "驳回", type: "error"}
+                ],
+                ynList: [
+                    { value: 0, desc: "正常"},
+                    { value: 1, desc: "封禁"}
                 ]
             }
         },
@@ -211,6 +245,9 @@
             handleCurrentChange(val) {
                 this.queryData.pageIndex = val;
                this.initData();
+            },
+            openUserInfoPage(openId) {
+                window.open("/userInfo?openId=" + openId, "_blank");
             }
         },
     }
