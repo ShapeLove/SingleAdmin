@@ -4,18 +4,23 @@
         <div class="table_container">
             <el-form :inline="true" :model="queryData" class="demo-form-inline">
                 <el-form-item label="标签类型">
-                    <el-form-item label="活动区域">
-                        <el-select v-model="formInline.region" placeholder="活动区域">
-                            <el-option label="区域一" value="shanghai"></el-option>
-                            <el-option label="区域二" value="beijing"></el-option>
-                        </el-select>
-                    </el-form-item>
+                    <el-select v-model="queryData.tagType" placeholder="请选择标签类型" clearable>
+                        <el-option
+                            v-for="item in tagOptions"
+                            :key="item.value"
+                            :label="item.desc"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="initData">查询</el-button>
                 </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" plain @click="open" style="margin-bottom: 10px;">添加标签</el-button>
+                </el-form-item>
             </el-form>
-            <el-button type="primary" plain @click="open" style="margin-bottom: 10px;">添加标签</el-button>
+
             <el-table
                 :data="tableData"
                 highlight-current-row
@@ -26,6 +31,11 @@
                     width="100">
                 </el-table-column>
                 <el-table-column
+                    property="tagName"
+                    label="标签名称"
+                >
+                </el-table-column>
+                <el-table-column
                     property="create"
                     label="创建日期"
                     >
@@ -33,15 +43,9 @@
                 <el-table-column
                     property="tagType"
                     label="标签类型"
-                ></el-table-column>
-                <el-table-column
-                    property="tagName"
-                    label="标签名称"
-                    >
+                >
                     <template slot-scope="scope">
-                        <el-tag
-                            :type="scope.$index %2 > 0 ? 'primary' : 'success'"
-                            close-transition>{{scope.row.tagName}}</el-tag>
+                        <el-tag type="primary"> {{getTagDesc(scope.row.tagType)}}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" >
@@ -79,7 +83,7 @@
                             <el-option
                                 v-for="item in tagOptions"
                                 :key="item.value"
-                                :label="item.label"
+                                :label="item.desc"
                                 :value="item.value">
                             </el-option>
                         </el-select>
@@ -105,18 +109,19 @@
                 centerDialogVisible: false,
                 formInline:{
                     tagName: '',
-                    tagType: null
+                    tagType: 1
                 },
                 tableData: [],
                 count: 0,
                 queryData: {
                     pageIndex: 1,
-                    pageSize: 10
+                    pageSize: 10,
+                    tagType: null
                 },
                 tagOptions: [
-                    {value: 1, label: "正在做..."},
-                    {value: 2, label: "打算做..."},
-                    {value: 3, label: "我的活动...."}
+                    {value: 1, desc: "正在做"},
+                    {value: 2, desc: "打算做"},
+                    {value: 3, desc: "我的活动"}
                 ]
             }
         },
@@ -204,6 +209,9 @@
                     });
                     console.log('删除标签失败')
                 }
+            },
+            getTagDesc(value) {
+                return this.tagOptions.find(x => x.value === value).desc;
             }
         },
     }

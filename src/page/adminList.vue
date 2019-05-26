@@ -5,6 +5,10 @@
             <el-table
 		      :data="tableData"
 		      style="width: 100%">
+                <el-table-column
+                    type="index"
+                    width="100">
+                </el-table-column>
 		      <el-table-column
 		        prop="adminName"
 		        label="姓名"
@@ -106,15 +110,48 @@
 
 <style lang="less">
 	@import '../style/mixin';
+    .demo-table-expand {
+        font-size: 0;
+    }
+    .demo-table-expand label {
+        width: 90px;
+        color: #99a9bf;
+    }
+    .demo-table-expand .el-form-item {
+        margin-right: 0;
+        margin-bottom: 0;
+        width: 50%;
+    }
     .table_container{
         padding: 20px;
     }
-    .el-table .info-row {
-        background: oldlace;
+    .Pagination{
+        display: flex;
+        justify-content: flex-start;
+        margin-top: 8px;
     }
-
-    .el-table .positive-row {
-        background: #f0f9eb;
+    .avatar-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    .avatar-uploader .el-upload:hover {
+        border-color: #20a0ff;
+    }
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 120px;
+        height: 120px;
+        line-height: 120px;
+        text-align: center;
+    }
+    .avatar {
+        width: 120px;
+        height: 120px;
+        display: block;
     }
 </style>
 
