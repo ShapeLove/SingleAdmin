@@ -29,6 +29,9 @@
                     property="reportType"
                     label="举报类型"
                 >
+                    <template slot-scope="scope">
+                        <el-tag type="primary">{{getReportTypeName(scope.row.reportType)}}</el-tag>
+                    </template>
                 </el-table-column>
                 <el-table-column
                     property="create"
@@ -38,14 +41,19 @@
                     property="status"
                     label="审核状态"
                 >
+                    <template slot-scope="scope">
+                        <el-tag type="primary"> {{getReportStatusName(scope.row.status)}}</el-tag>
+                    </template>
                 </el-table-column>
                 <el-table-column label="操作" width="200">
                     <template slot-scope="scope">
                         <el-button
                             size="small"
+                            v-if="scope.row.status === 0"
                             @click="handlePass(scope.row)" >通过</el-button>
                         <el-button
                             size="small"
+                            v-if="scope.row.status === 0"
                             @click="refuseReport(scope.row)">驳回</el-button>
                         <el-button
                             size="small"
@@ -56,7 +64,6 @@
             </el-table>
             <div class="Pagination" style="text-align: left;margin-top: 10px;">
                 <el-pagination
-                    @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
                     :current-page="queryData.pageIndex"
                     :page-size="queryData.pageSize"
@@ -64,23 +71,6 @@
                     :total="count">
                 </el-pagination>
             </div>
-            <el-dialog
-                title="输入驳回原因"
-                :visible.sync="centerDialogVisible"
-                width="20%"
-                center>
-
-                <el-form :model="formInline">
-                    <el-form-item label="驳回原因">
-                        <el-input v-model="formInline.reason" placeholder="请输入驳回原因..."></el-input>
-                    </el-form-item>
-                </el-form>
-
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="centerDialogVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="closeReason">确 定</el-button>
-                 </span>
-            </el-dialog>
         </div>
     </div>
 </template>
@@ -92,10 +82,6 @@
     export default {
         data(){
             return {
-                centerDialogVisible: false,
-                formInline:{
-                    reason: '',
-                },
                 tableData: [],
                 currentRow: null,
                 offset: 0,
@@ -106,6 +92,17 @@
                     pageIndex: 1,
                     pageSize: 10
                 },
+                reportTypeList: [
+                    {value: 1, desc: "照片涉黄"},
+                    {value: 2, desc: "恶意骚扰"},
+                    {value: 3, desc: "盗用图片"},
+                    {value: 4, desc: "其他"}
+                ],
+                reportStatusList: [
+                    {value: 0, desc: "待审核"},
+                    {value: 1, desc: "审核通过"},
+                    {value: 2, desc: "驳回"}
+                ]
             }
         },
         created(){
@@ -115,6 +112,12 @@
             headTop,
         },
         methods: {
+            getReportTypeName(value) {
+                return this.reportTypeList.find(x => x.value === value).desc;
+            },
+            getReportStatusName(value) {
+                return this.reportStatusList.find(x => x.value === value).desc;
+            },
             async deleteReport(rowId) {
                 const res = await reportManage.deleteReport({"id": rowId});
                 if (res.success) {

@@ -267,3 +267,8 @@ export const userManage = {
     handleUserEffect: data => axioss('/admin/user/updateUserEffect', data, 'POST'),
     getUserInfo: open_id => axioss('/admin/user/queryUserInfo', {"openId": open_id}, 'POST')
 };
+
+
+export const adminManage = {
+    getAdminList: data => axioss('/admin/manager/pageList', data, 'POST')
+}

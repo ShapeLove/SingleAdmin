@@ -2,6 +2,25 @@
     <div class="fillcontain">
         <head-top></head-top>
         <div class="table_container">
+            <el-form :inline="true" :model="queryData" class="demo-form-inline">
+                <el-form-item label="用户名">
+                    <el-input v-model="queryData.name"></el-input>
+                </el-form-item>
+                <el-form-item label="权限">
+                    <el-select v-model="queryData.level" clearable>
+                        <el-option
+                            v-for="item in levelList"
+                            :key="item.value"
+                            :label="item.desc"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="initData">查询</el-button>
+                </el-form-item>
+            </el-form>
+
             <el-table
 		      :data="tableData"
 		      style="width: 100%">
@@ -10,7 +29,7 @@
                     width="100">
                 </el-table-column>
 		      <el-table-column
-		        prop="adminName"
+		        prop="name"
 		        label="姓名"
 		        width="180">
 		      </el-table-column>
@@ -25,14 +44,16 @@
 		      <el-table-column
 		        prop="admin"
 		        label="权限">
+                  <template slot-scope="scope">
+                      <el-tag type="primary"> {{getLevelName(scope.row.level)}}</el-tag>
+                  </template>
 		      </el-table-column>
 		    </el-table>
 		    <div class="Pagination" style="text-align: left;margin-top: 10px;">
                 <el-pagination
-                  @size-change="handleSizeChange"
                   @current-change="handleCurrentChange"
-                  :current-page="currentPage"
-                  :page-size="size"
+                  :current-page="queryData.pageIndex"
+                  :page-size="queryData.pageSize"
                   layout="total, prev, pager, next"
                   :total="count">
                 </el-pagination>
@@ -43,15 +64,24 @@
 
 <script>
     import headTop from '../components/headTop'
-    import {adminList, adminCount} from '@/api/getData'
+    import {adminManage} from '@/api/getData'
     export default {
         data(){
             return {
                 tableData: [],
                 currentRow: null,
                 count: 0,
-                size: 10,
-                currentPage: 1,
+                queryData: {
+                    pageIndex: 1,
+                    pageSize: 10,
+                    name: null,
+                    level: null
+                },
+                levelList: [
+                    {value: 0, desc: "管理员"},
+                    {value: 1, desc: "开发管理员"},
+                    {value: 2, desc: "超级管理员"}
+                ]
             }
         },
     	components: {
@@ -69,6 +99,9 @@
                 }
                 return '';
             },
+            getLevelName(level) {
+              return this.levelList.find(x => x.value === level).desc;
+            },
             async initData(){
                 try{
                     this.getAdmin();
@@ -85,18 +118,10 @@
             },
             async getAdmin(){
                 try{
-                    const res = await adminList({pageIndex: this.currentPage, pageSize: this.size});
+                    const res = await adminManage.getAdminList(this.queryData);
                     if (res.success) {
-                    	this.tableData = [];
+                    	this.tableData = res.dataList;
                     	this.count= res.totalCount;
-                    	res.dataList.forEach(item => {
-                    		const tableItem = {
-                                create: item.create,
-						        adminName: item.name,
-						        admin: item.level
-                    		};
-                    		this.tableData.push(tableItem)
-                    	})
                     }else{
                     	throw new Error(res.message)
                     }
