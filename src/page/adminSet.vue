@@ -5,7 +5,7 @@
         <el-card class="admin_set">
             <ul>
                 <li>
-                    <span>姓名：</span><span>侯鑫超</span>
+                    <span>用户名：</span><span>侯鑫超</span>
                 </li>
                 <li>
                     <span>注册时间：</span><span>2019-03-20 12:07:23</span>
@@ -16,18 +16,18 @@
                 <li>
                     <span>管理员 ID：</span><span>123445</span>
                 </li>
-                <li>
-                    <span>更换头像：</span>
-                    <el-upload
-                      class="avatar-uploader"
-                      :action="baseUrl + '/admin/update/avatar/' + adminInfo.id"
-                      :show-file-list="false"
-                      :on-success="uploadImg"
-                      :before-upload="beforeImgUpload">
-                      <img v-if="adminInfo.avatar" :src="baseImgPath + adminInfo.avatar" class="avatar">
-                      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
-                </li>
+                <!--<li>-->
+                    <!--<span>更换头像：</span>-->
+                    <!--<el-upload-->
+                      <!--class="avatar-uploader"-->
+                      <!--:action="baseUrl + '/admin/update/avatar/' + adminInfo.id"-->
+                      <!--:show-file-list="false"-->
+                      <!--:on-success="uploadImg"-->
+                      <!--:before-upload="beforeImgUpload">-->
+                      <!--<img v-if="adminInfo.avatar" :src="baseImgPath + adminInfo.avatar" class="avatar">-->
+                      <!--<i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+                    <!--</el-upload>-->
+                <!--</li>-->
             </ul>
         </el-card>
     </div>

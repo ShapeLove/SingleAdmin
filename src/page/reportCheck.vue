@@ -2,6 +2,33 @@
     <div class="fillcontain">
         <head-top></head-top>
         <div class="table_container">
+            <el-form :inline="true" :model="queryData" class="demo-form-inline">
+                <el-form-item label="举报类型">
+                    <el-select v-model="queryData.reportType" clearable>
+                        <el-option
+                            v-for="item in reportTypeList"
+                            :key="item.value"
+                            :label="item.desc"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="审核状态">
+                    <el-select v-model="queryData.status" clearable>
+                        <el-option
+                            v-for="item in reportStatusList"
+                            :key="item.value"
+                            :label="item.desc"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="initData">查询</el-button>
+                </el-form-item>
+            </el-form>
+
+
             <el-table
                 :data="tableData"
                 highlight-current-row
@@ -83,11 +110,7 @@
         data(){
             return {
                 tableData: [],
-                currentRow: null,
-                offset: 0,
-                limit: 20,
                 count: 0,
-                currentPage: 1,
                 queryData: {
                     pageIndex: 1,
                     pageSize: 10
@@ -185,7 +208,7 @@
             },
             handleCurrentChange(val) {
                 this.queryData.pageIndex = val;
-                this.getTag()
+                this.getReport();
             }
         },
     }

@@ -2,6 +2,15 @@
     <div class="fillcontain">
         <head-top></head-top>
         <div class="table_container">
+            <el-form :inline="true" :model="queryData" class="demo-form-inline">
+                <el-form-item label="异常方法">
+                    <el-input v-model="queryData.invocationName" placeholder="支持模糊查询"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="getExceptList">查询</el-button>
+                </el-form-item>
+            </el-form>
+
             <el-table
                 :data="tableData"
                 highlight-current-row
