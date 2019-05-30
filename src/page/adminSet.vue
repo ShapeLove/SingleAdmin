@@ -5,16 +5,16 @@
         <el-card class="admin_set">
             <ul>
                 <li>
-                    <span>用户名：</span><span>侯鑫超</span>
+                    <span>管理员 ID：</span><span>{{adminInfo.id}}</span>
                 </li>
                 <li>
-                    <span>注册时间：</span><span>2019-03-20 12:07:23</span>
+                    <span>用户名：</span><span>{{adminInfo.name}}</span>
                 </li>
                 <li>
-                    <span>管理员权限：</span><span>超级管理员</span>
+                    <span>注册时间：</span><span>{{adminInfo.create}}</span>
                 </li>
                 <li>
-                    <span>管理员 ID：</span><span>123445</span>
+                    <span>管理员权限：</span><span>{{getLevelDesc(adminInfo.level)}}</span>
                 </li>
                 <!--<li>-->
                     <!--<span>更换头像：</span>-->
@@ -43,6 +43,11 @@
             return {
                 baseUrl,
                 baseImgPath,
+                levelList: [
+                    {value: 0, desc: "管理员"},
+                    {value: 1, desc: "开发管理员"},
+                    {value: 2, desc: "超级管理员"}
+                ]
             }
         },
     	components: {
@@ -58,6 +63,9 @@
                 }else{
                     this.$message.error('上传图片失败！');
                 }
+            },
+            getLevelDesc(value) {
+               return this.levelList.find(x => x.value === value).desc;
             },
             beforeImgUpload(file) {
                 const isRightType = (file.type === 'image/jpeg') || (file.type === 'image/png');

@@ -272,3 +272,9 @@ export const userManage = {
 export const adminManage = {
     getAdminList: data => axioss('/admin/manager/pageList', data, 'POST')
 }
+
+export const analysisManage = {
+    analysisUserCountByCity: () => axioss('/admin/analysis/userCountByCity'),
+    analysisUserCountByDate: data => axioss('/admin/analysis/userCountByDate', data),
+    analysisAdminUserCountByDate: data => axioss('/admin/analysis/adminUserCountByDate', data)
+}
