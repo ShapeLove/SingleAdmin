@@ -35,17 +35,18 @@
     		...mapState(['adminInfo']),
     	},
 		methods: {
-			...mapActions(['getAdminData']),
+			...mapActions(['getAdminData', 'removeAdminData']),
 			async handleCommand(command) {
 				if (command == 'home') {
 					this.$router.push('/manage');
 				}else if(command == 'signout'){
 					const res = await signout()
-					if (res.status == 1) {
+					if (res.status) {
 						this.$message({
 	                        type: 'success',
 	                        message: '退出成功'
 	                    });
+						this.removeAdminData();
 	                    this.$router.push('/');
 					}else{
 						this.$message({

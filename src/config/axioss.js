@@ -22,7 +22,7 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
         }
         const response = await _axios.get(url);
         const result = response.data;
-        if (result === "notlogin") {
+        if (result === "notlogin" || result === "") {
             router.replace("/?path=" + router.currentRoute.fullPath);
             return null;
         }

@@ -8,13 +8,13 @@
 						<template slot="title"><i class="el-icon-document"></i>数据管理</template>
 						<el-menu-item index="userList">用户列表</el-menu-item>
                         <el-menu-item index="tagList">标签列表</el-menu-item>
-						<el-menu-item index="adminList">管理员列表</el-menu-item>
+						<el-menu-item index="adminList" v-if="checkPermission([2])">管理员列表</el-menu-item>
 					</el-submenu>
 					<el-submenu index="3">
 						<template slot="title"><i class="el-icon-upload2"></i>审核</template>
 						<el-menu-item index="reportCheck">举报审核</el-menu-item>
 					</el-submenu>
-                    <el-submenu index="4">
+                    <el-submenu index="4" v-if="checkPermission([2, 1])">
                         <template slot="title"><i class="el-icon-warning"></i>异常信息</template>
                         <el-menu-item index="warning">异常信息处理</el-menu-item>
                     </el-submenu>
@@ -42,12 +42,23 @@
 </template>
 
 <script>
+    import {mapActions, mapState} from 'vuex'
     export default {
 		computed: {
 			defaultActive: function(){
 				return this.$route.path.replace('/', '');
-			}
+			},
+            ...mapState(['adminInfo'])
 		},
+        methods: {
+		    checkPermission(levelList) {
+		        if (levelList.find(x => x === this.adminInfo.level)) {
+		            return true;
+                }else {
+		            return false;
+                }
+            }
+        }
     }
 </script>
 

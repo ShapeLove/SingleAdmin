@@ -13,7 +13,10 @@ const state = {
 const mutations = {
 	saveAdminInfo(state, adminInfo){
 		state.adminInfo = adminInfo;
-	}
+	},
+    deleteAdminInfo(state) {
+	    state.adminInfo = null;
+    }
 }
 
 const actions = {
@@ -28,7 +31,10 @@ const actions = {
 		}catch(err){
 			// console.log(err.message)
 		}
-	}
+	},
+    removeAdminData({commit}) {
+	    commit('deleteAdminInfo');
+    }
 }
 
 export default new Vuex.Store({

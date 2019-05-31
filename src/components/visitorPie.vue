@@ -19,7 +19,7 @@
         props: ['pieData'],
         methods: {
             initData(){
-                console.log(this.pieData)
+                console.log(this.pieData);
                 const option = {
                     title : {
                         text: '用户分布',
@@ -33,7 +33,7 @@
                     legend: {
                         orient: 'vertical',
                         left: 'left',
-                        data: ['北京','上海','深圳','杭州','其他']
+                        data: this.pieData.result.map(x => x.name)
                     },
                     series : [
                         {
@@ -41,13 +41,7 @@
                             type: 'pie',
                             radius : '55%',
                             center: ['50%', '60%'],
-                            data:[
-                                {value:this.pieData.beijing, name:'北京'},
-                                {value:this.pieData.shanghai, name:'上海'},
-                                {value:this.pieData.shenzhen, name:'深圳'},
-                                {value:this.pieData.hangzhou, name:'杭州'},
-                                {value:this.pieData.qita, name:'其他'}
-                            ],
+                            data: this.pieData.result,
                             itemStyle: {
                                 emphasis: {
                                     shadowBlur: 10,

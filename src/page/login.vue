@@ -115,6 +115,7 @@
 					if (valid) {
 						const res = await login({name: this.loginForm.username, passwd: this.loginForm.password})
                         if (res.success) {
+                            this.getAdminData();
                             if (this.path) {
                                 this.$router.replace(this.path)
                             }else {

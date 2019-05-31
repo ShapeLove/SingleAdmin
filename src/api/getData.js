@@ -11,7 +11,7 @@ export const login = data => axioss('/admin/login/login', data, 'POST');
  * 退出
  */
 
-export const signout = () => fetch('/admin/signout');
+export const signout = () => fetch('/admin/login/loginOut');
 
 /**
  * 获取用户信息
@@ -69,13 +69,6 @@ export const adminList = data => fetch('/admin/manager/pageList', data, 'POST');
 
 export const adminCount = () => fetch('/admin/count');
 
-/**
- * 获取定位城市
- */
-
-export const cityGuess = () => fetch('/v1/cities', {
-    type: 'guess'
-});
 
 /**
  * 添加商铺
