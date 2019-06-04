@@ -44,12 +44,19 @@
 <script>
     import {mapActions, mapState} from 'vuex'
     export default {
+        data () {
+            return {
+              defaultActive: null
+            }
+        },
 		computed: {
-			defaultActive: function(){
-				return this.$route.path.replace('/', '');
-			},
             ...mapState(['adminInfo'])
 		},
+        mounted() {
+           this.$nextTick(() => {
+               setTimeout(()=> {this.defaultActive = this.$route.path.replace('/', '');}, 50);
+           })
+        },
         methods: {
 		    checkPermission(levelList) {
 		        if (levelList.find(x => x === this.adminInfo.level)) {

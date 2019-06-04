@@ -65,6 +65,9 @@
                 }
             },
             getLevelDesc(value) {
+                if (!value) {
+                    return "";
+                }
                return this.levelList.find(x => x.value === value).desc;
             },
             beforeImgUpload(file) {

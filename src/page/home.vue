@@ -65,25 +65,25 @@
         },
     	methods: {
     		async initData(){
-    		    const userCountResult = await analysisManage.analysisUserCountByDate();
-    		    if (userCountResult) {
-    		        this.allUserCount = userCountResult.totalCount;
-    		        if (userCountResult.dateKeyList) {
-                        this.sevenDay = userCountResult.dateKeyList.reverse();
-                        this.sevenDate[0] = userCountResult.dataList.reverse();
-                        this.addUser = userCountResult.dataList[0];
-                    }
-
-                }
-                const adminUserCountResult = await analysisManage.analysisAdminUserCountByDate();
-    		    if (adminUserCountResult) {
-    		        this.allAdminCount = adminUserCountResult.totalCount;
-    		        if (adminUserCountResult.dataList) {
-                        this.sevenDay = adminUserCountResult.dateKeyList.reverse();
-    		            this.sevenDate[1] = adminUserCountResult.dataList.reverse();
-    		            this.addAdmin = adminUserCountResult.dataList[0]
-                    }
-    		    }
+    		    // const userCountResult = await analysisManage.analysisUserCountByDate();
+    		    // if (userCountResult) {
+    		    //     this.allUserCount = userCountResult.totalCount;
+    		    //     if (userCountResult.dateKeyList) {
+                //         this.sevenDay = userCountResult.dateKeyList.reverse();
+                //         this.sevenDate[0] = userCountResult.dataList.reverse();
+                //         this.addUser = userCountResult.dataList[0];
+                //     }
+                //
+                // }
+                // const adminUserCountResult = await analysisManage.analysisAdminUserCountByDate();
+    		    // if (adminUserCountResult) {
+    		    //     this.allAdminCount = adminUserCountResult.totalCount;
+    		    //     if (adminUserCountResult.dataList) {
+                //         this.sevenDay = adminUserCountResult.dateKeyList.reverse();
+    		    //         this.sevenDate[1] = adminUserCountResult.dataList.reverse();
+    		    //         this.addAdmin = adminUserCountResult.dataList[0]
+                //     }
+    		    // }
     			// const today = dtime().format('YYYY-MM-DD')
     		/*	Promise.all([userCount(today), orderCount(today), adminDayCount(today), getUserCount(), getOrderCount(), adminCount()])
     			.then(res => {
