@@ -20,6 +20,7 @@ const userInfo = r => require.ensure([], () => r(require('@/page/userInfo')), 'u
 const routes = [
 	{
 		path: '/',
+        meta: ['登录'],
 		component: login
 	},
     {
@@ -28,6 +29,7 @@ const routes = [
     },
     {
         path: '/userInfo',
+        meta: ['用户信息'],
         component: userInfo
     },
 	{
@@ -37,7 +39,7 @@ const routes = [
 		children: [{
 			path: '',
 			component: home,
-			meta: [],
+			meta: ['首页'],
 		},{
 			path: '/reportCheck',
 			component: reportCheck,

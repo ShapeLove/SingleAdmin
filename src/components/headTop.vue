@@ -6,7 +6,7 @@
 			<el-breadcrumb-item v-for="(item, index) in $route.meta" :key="index">{{item}}</el-breadcrumb-item>
 		</el-breadcrumb>
 		<el-dropdown @command="handleCommand" menu-align='start'>
-			<img :src="baseImgPath + adminInfo.avatar" class="avator">
+			<img :src="baseImgPath + avatar" class="avator">
 			<el-dropdown-menu slot="dropdown">
 				<el-dropdown-item command="home">首页</el-dropdown-item>
 				<el-dropdown-item command="signout">退出</el-dropdown-item>
@@ -33,6 +33,9 @@
     	},
     	computed: {
     		...mapState(['adminInfo']),
+            avatar() {
+    		    return this.adminInfo.avatar ? this.adminInfo.avatar : "abbfb1246eb9f9bb453188ec5491d771"
+            }
     	},
 		methods: {
 			...mapActions(['getAdminData', 'removeAdminData']),
@@ -40,8 +43,8 @@
 				if (command == 'home') {
 					this.$router.push('/manage');
 				}else if(command == 'signout'){
-					const res = await signout()
-					if (res.status) {
+					const res = await signout();
+					if (res) {
 						this.$message({
 	                        type: 'success',
 	                        message: '退出成功'

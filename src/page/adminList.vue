@@ -22,40 +22,40 @@
             </el-form>
 
             <el-table
-		      :data="tableData"
-		      style="width: 100%">
+                :data="tableData"
+                style="width: 100%">
                 <el-table-column
                     type="index"
                     width="100">
                 </el-table-column>
-		      <el-table-column
-		        prop="name"
-		        label="姓名"
-		        width="180">
-		      </el-table-column>
-		      <el-table-column
-		        label="注册日期"
-		        width="220">
-                  <template slot-scope="scope">
-                      <el-icon name="time"></el-icon>
-                      <span style="margin-left: 10px">{{ scope.row.create }}</span>
-                  </template>
-		      </el-table-column>
-		      <el-table-column
-		        prop="admin"
-		        label="权限">
-                  <template slot-scope="scope">
-                      <el-tag type="primary"> {{getLevelName(scope.row.level)}}</el-tag>
-                  </template>
-		      </el-table-column>
-		    </el-table>
-		    <div class="Pagination" style="text-align: left;margin-top: 10px;">
+                <el-table-column
+                    prop="name"
+                    label="姓名"
+                    width="180">
+                </el-table-column>
+                <el-table-column
+                    label="注册日期"
+                    width="220">
+                    <template slot-scope="scope">
+                        <el-icon name="time"></el-icon>
+                        <span style="margin-left: 10px">{{ scope.row.create }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="admin"
+                    label="权限">
+                    <template slot-scope="scope">
+                        <el-tag type="primary"> {{getLevelName(scope.row.level)}}</el-tag>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="Pagination" style="text-align: left;margin-top: 10px;">
                 <el-pagination
-                  @current-change="handleCurrentChange"
-                  :current-page="queryData.pageIndex"
-                  :page-size="queryData.pageSize"
-                  layout="total, prev, pager, next"
-                  :total="count">
+                    @current-change="handleCurrentChange"
+                    :current-page="queryData.pageIndex"
+                    :page-size="queryData.pageSize"
+                    layout="total, prev, pager, next"
+                    :total="count">
                 </el-pagination>
             </div>
         </div>
