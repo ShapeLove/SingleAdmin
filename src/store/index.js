@@ -30,6 +30,7 @@ const actions = {
 			}
 		}catch(err){
 			// console.log(err.message)
+            commit('deleteAdminInfo');
 		}
 	},
     removeAdminData({commit}) {

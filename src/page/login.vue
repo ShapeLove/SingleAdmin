@@ -100,8 +100,20 @@
 	            this.path = path;
             }
 			this.showLogin = true;
+	        console.log("mounted", this.adminInfo);
 			if (!this.adminInfo.id) {
-            	this.getAdminData()
+            	this.getAdminData();
+            	setTimeout(() => this.checkLogin(), 100);
+            }else {
+                this.$message({
+                    type: 'success',
+                    message: '检测到您之前登录过，将自动登录'
+                });
+                if (this.path) {
+                    this.$router.replace(this.path)
+                }else {
+                    this.$router.replace('manage')
+                }
             }
 		},
 		computed: {
@@ -109,6 +121,19 @@
 		},
 		methods: {
 			...mapActions(['getAdminData']),
+            checkLogin() {
+			   if (this.adminInfo.id) {
+                   this.$message({
+                       type: 'success',
+                       message: '检测到您之前登录过，将自动登录'
+                   });
+                   if (this.path) {
+                       this.$router.replace(this.path)
+                   }else {
+                       this.$router.replace('manage')
+                   }
+               }
+            },
 			async submitForm(formName) {
 			    console.log( this.loginForm);
 				this.$refs[formName].validate(async (valid) => {
@@ -138,21 +163,6 @@
 					}
 				});
 			},
-		},
-		watch: {
-			adminInfo: function (newValue){
-				if (newValue.id) {
-					this.$message({
-                        type: 'success',
-                        message: '检测到您之前登录过，将自动登录'
-                    });
-                    if (this.path) {
-                        this.$router.replace(this.path)
-                    }else {
-                        this.$router.replace('manage')
-                    }
-				}
-			}
 		}
 	}
 </script>

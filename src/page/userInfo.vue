@@ -10,9 +10,9 @@
                         <p class="info-title" style="margin-top: 0.6vw;"><span style="width: 5vw; display: inline-block; text-align: right; margin-right: 1vw;">昵称: </span>{{userInfo.name}} <el-tag style="margin-left: 1vw;">{{userSex}}</el-tag></p>
                         <div style="margin-top: 10px;font-size: 1.1em;">
                             <span style="width: 5vw; display: inline-block; text-align: right; margin-right: 1vw;">个人标签: </span>
-                            <el-tag type="primary" v-if="userInfo.doingTags">{{userInfo.doingTags}}</el-tag>
-                            <el-tag type="primary" v-if="userInfo.planTags">{{userInfo.planTags}}</el-tag>
-                            <el-tag type="primary" v-if="userInfo.activityTags">{{userInfo.activityTags}}</el-tag>
+                            <el-tag type="primary" v-if="userInfo.doingTags">正在..{{userInfo.doingTagsDesc}}</el-tag>
+                            <el-tag type="primary" v-if="userInfo.planTags">打算..{{userInfo.planTagsDesc}}</el-tag>
+                            <el-tag type="primary" v-if="userInfo.activityTags">活动是..{{userInfo.activityTagsDesc}}</el-tag>
                         </div>
                     </div>
                     <div
@@ -63,11 +63,11 @@
                 <div class="body-info-row">
                     <div class="body-item">
                         <span class="title"><span style="color: red">*</span>星座：</span>
-                        <span class="value">{{userInfo.constellation}}</span>
+                        <span class="value">{{userInfo.constellationStr}}</span>
                     </div>
                     <div class="body-item">
                         <span class="title"><span style="color: red">*</span>学历：</span>
-                        <span class="value">{{userInfo.education}}</span>
+                        <span class="value">{{userInfo.educationStr}}</span>
                     </div>
                 </div>
                 <div class="body-info-row">
@@ -137,8 +137,8 @@
         },
         computed: {
             userPhotos() {
-                if (this.userInfo.photos) {
-                    return JSON.parse(this.userInfo.photos);
+                if (this.userInfo.photoList) {
+                    return this.userInfo.photoList;
                 }
                 return [];
             },
