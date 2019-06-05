@@ -14,8 +14,8 @@ if (process.env.NODE_ENV == 'development') {
 	baseUrl = '//localhost:8080';//localhost:8080
     baseImgPath = '//zimg.shpcoder.cn/';
 }else{
-	baseUrl = '//elm.cangdu.org';
-    baseImgPath = '//elm.cangdu.org/img/';
+	baseUrl = '//shape.shpcoder.cn';
+    baseImgPath = '//zimg.shpcoder.cn/';
 }
 
 export {
